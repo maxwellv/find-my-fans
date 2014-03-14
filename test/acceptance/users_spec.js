@@ -2,7 +2,7 @@
 
 'use strict';
 
-process.env.DBNAME = 'barter-test';
+process.env.DBNAME = 'findmyfriends-test';
 var app = require('../../app/app');
 var request = require('supertest');
 var expect = require('chai').expect;
@@ -88,7 +88,6 @@ describe('users', function(){
       });
     });
   });
-/*
 
   describe('POST /login', function(){
     it('should log in a good user', function(done){
@@ -97,6 +96,8 @@ describe('users', function(){
       .field('email', 'sam@aol.com')
       .field('password', '678utf')
       .end(function(err, res){
+        console.log('res.body.biatches');
+        console.log(res.body);
         expect(res.body.success).to.equal(true);
         done();
       });
@@ -123,5 +124,5 @@ describe('users', function(){
       });
     });
   });
-  */
+
 });
