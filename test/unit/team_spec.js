@@ -3,7 +3,7 @@
 
 process.env.DBNAME = 'findMyFans-test';
 var expect = require('chai').expect;
-var Mongo = require('mongodb');
+//var Mongo = require('mongodb');
 var Team;
 var teams;
 
@@ -106,6 +106,83 @@ describe('Team', function(){
     });
   });
 
+  describe('#findBySportName', function(){
+    it('should find all teams by sport', function(done){
+      var obj1 = {_id:'s:70~l:90~t:1', city: 'Boston', name: 'Bruins', sportName: 'hockey', leagueName:'National Hockey League', leagueShortName: 'NHL', color:'000000'};
+      var team1 = new Team(obj1);
+      var obj2 = {_id:'s:60~l:90~t:1', city: 'Tennessee', name: 'Titans', sportName: 'football', leagueName:'National Football League', leagueShortName: 'NFL', color:'0000FF'};
+      var team2 = new Team(obj2);
+      team1.insert(function(){
+        team2.insert(function(){
+          Team.findBySportName(team1.sportName, function(records){
+            expect(records).to.have.length(1);
+            expect(records[0].city).to.equal('Boston');
+            expect(records[0]._id).to.equal(team1._id);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  describe('#findByName', function(){
+    it('should find a team by name', function(done){
+      var obj1 = {_id:'s:70~l:90~t:1', city: 'Boston', name: 'Bruins', sportName: 'hockey', leagueName:'National Hockey League', leagueShortName: 'NHL', color:'000000'};
+      var team1 = new Team(obj1);
+      var obj2 = {_id:'s:60~l:90~t:1', city: 'Tennessee', name: 'Titans', sportName: 'football', leagueName:'National Football League', leagueShortName: 'NFL', color:'0000FF'};
+      var team2 = new Team(obj2);
+      team1.insert(function(){
+        team2.insert(function(){
+          Team.findByName(team1.name, function(records){
+            expect(records[0].city).to.equal('Boston');
+            expect(records[0]._id).to.equal(team1._id);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+  describe('#findByCity', function(){
+    it('should find a team by city', function(done){
+      var obj1 = {_id:'s:70~l:90~t:1', city: 'Boston', name: 'Bruins', sportName: 'hockey', leagueName:'National Hockey League', leagueShortName: 'NHL', color:'000000'};
+      var team1 = new Team(obj1);
+      var obj2 = {_id:'s:60~l:90~t:1', city: 'Tennessee', name: 'Titans', sportName: 'football', leagueName:'National Football League', leagueShortName: 'NFL', color:'0000FF'};
+      var team2 = new Team(obj2);
+      team1.insert(function(){
+        team2.insert(function(){
+          Team.findByCity(team1.city, function(records){
+            expect(records[0].city).to.equal('Boston');
+            expect(records[0]._id).to.equal(team1._id);
+            done();
+          });
+        });
+      });
+    });
+  });
+
+/*
+  describe('#findByUser', function(){
+    it('should find all teams by user', function(done){
+      var obj1 = {_id:'s:70~l:90~t:1', city: 'Boston', name: 'Bruins', sportName: 'hockey', leagueName:'National Hockey League', leagueShortName: 'NHL', color:'000000'};
+      var team1 = new Team(obj1);
+      var obj2 = {_id:'s:60~l:90~t:1', city: 'Tennessee', name: 'Titans', sportName: 'football', leagueName:'National Football League', leagueShortName: 'NFL', color:'0000FF'};
+      var team2 = new Team(obj2);
+      team1.insert(function(){
+        team2.insert(function(){
+          bob.addTeam({name:team1._name, teamId:team1._id}, function(){
+            Team.findByUser(bob._id, function(records){
+              expect(records).to.have.length(1);
+              expect(records[0]._id).to.equal(team1._id);
+              console.log(records[0].name);
+              done();
+            });
+          });
+        });
+      });
+    });
+  });
+*/
 
 //End of Document
 });

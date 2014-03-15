@@ -2,13 +2,14 @@
 
 module.exports = Team;
 var teams = global.nss.db.collection('teams');
-var Mongo = require('mongodb');
+//var espnKey = process.env.ESPNKEY;
+//var $ = require('../static/js/vendor/jquery');
+//var Mongo = require('mongodb');
 //var _ = require('lodash');
 //var fs = require('fs');
 //var path = require('path');
 
 
-// if applicable, team._id = ESPN teamData.uid
 // watch for bugs with this.schedule: empty arrays can be dangerous!
 function Team(team){
   this._id = team._id;
@@ -26,6 +27,17 @@ Team.prototype.insert = function(fn){
   teams.insert(self, function(err, records){
     fn(err, records);
   });
+};
+
+Team.autoCreate = function(data, fn){
+  var dbData = [];
+  for(var i=0; i<data.length; i++){
+    var team = new Team(data[i]);
+    team.insert(function(records){
+      dbData.push(records[0]);
+    });
+  }
+  fn(dbData);
 };
 
 Team.destroy = function(_id, fn){
@@ -57,3 +69,35 @@ Team.findAll = function(fn){
   });
 };
 
+Team.findBySportName = function(sportName, fn){
+  teams.find({sportName:sportName}).toArray(function(err, records){
+    fn(records);
+  });
+};
+
+Team.findByName = function(name, fn){
+  teams.find({name:name}).toArray(function(err, records){
+    fn(records);
+  });
+};
+
+Team.findByCity = function(city, fn){
+  teams.find({city:city}).toArray(function(err, records){
+    fn(records);
+  });
+};
+
+/*
+Team.findByUser = function(userId, fn){
+  User.findById(userId, function(user){
+    var teams = user.teams;
+    var records = [];
+    for(var i=0; i<teams.length; i++){
+      Team.findById(teams[i].teamId, function(team){
+        records.push(team);
+      });
+    }
+    fn(records);
+  });
+};
+*/
