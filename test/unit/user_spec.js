@@ -7,9 +7,12 @@ var expect = require('chai').expect;
 var User;
 var fs = require('fs');
 var exec = require('child_process').exec;
+var Mongo = require('mongodb');
 var u1, u2;
 
 describe('User', function(){
+  this.timeout(5000); //email testing takes a while to execute, so I'm giving all tests five seconds to run
+
   before(function(done){
     var initMongo = require('../../app/lib/init-mongo');
     initMongo.db(function(){
@@ -26,11 +29,9 @@ describe('User', function(){
       var copyfile = __dirname + '/../fixtures/testpic-copy.jpg';
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile));
       global.nss.db.dropDatabase(function(err, result){
-        u1 = new User({name: 'Sue', email:'sue@aol.com', password:'678utf', photo:'img.gif', description:'my name is sue', teams:['Nashville Predators'], home:'Nashville, TN'});
-        u1.hashPassword(function(){
-          u1.save(function(){
-            done();
-          });
+        u1 = new User({name: 'Sue', email:'max.vance+FINDMYFANS_UNIT_TEST_BEFOREEACH@gmail.com', password:'678utf', photo:'img.gif', description:'my name is sue', teams:['Nashville Predators'], home:'Nashville, TN'});
+        u1.register(function(err, body){
+          done();
         });
       });
     });
@@ -48,6 +49,38 @@ describe('User', function(){
     });
   });
 
+  describe('register', function(){
+    it('should register a new user and put it in the DB', function(done){
+      u1 = new User({name:'Max', email: 'max.vance+FINDMYFANS_UNIT_TEST_REGISTER@gmail.com', password:'1234', photo:'img/photo.jpg', description:'my name is max', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u1.register(function(err, body){
+        expect(err).to.equal(null);
+        expect(u1.password).to.not.equal('1234');
+        expect(u1.password).to.have.length(60); //this checks for a hashed password
+        expect(u1._id).to.be.instanceof(Mongo.ObjectID);
+        body = JSON.parse(body);
+        expect(typeof body.id).to.equal('string');
+        done();
+      });
+    });
+
+    it('should not register a duplicate user based on email', function(done){
+      u1 = new User({name:'Not Max', email: 'max.vance+FINDMYFANS_UNIT_TEST_BEFOREEACH@gmail.com', password:'abcd', photo:'img/photo.jpg', description:'my name is not max', teams:['Tennessee Titans'], home:'Nashville, TN'});
+      u1.register(function(err, body){
+        expect(typeof err).to.equal('string');
+        done();
+      });
+    });
+
+    it('should not register a duplicate user based on name', function(done){
+      u1 = new User({name:'Sue', email: 'max.vance+YOU_SHOULD_NOT_GET_THIS_EMAIL@gmail.com', password:'1234', photo:'img/photo.jpg', description:'my name is max', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u1.register(function(err, body){
+        expect(typeof err).to.equal('string');
+        done();
+      });
+    });
+  });
+
+  /* disabled these, the user.register function handles password hashing and dupe checking now
   describe('#hashPassword', function(){
     it('should hash the users password', function(done){
       u1 = new User({name: 'Sam', email:'sam@aol.com', password:'1234'});
@@ -85,14 +118,18 @@ describe('User', function(){
       });
     });
   });
+  */
 
   describe('.findById', function(){
     it('should find user by its id', function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u2.save(function(ret){
-        User.findById(ret._id.toString(), function(ret1){
-          expect(ret1.name).to.equal('Sam');
-          done();
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_FINDBYID@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2.register(function(err, ret){
+        User.findByEmail('max.vance+FINDMYFANS_UNIT_TEST_FINDBYID@gmail.com', function(ret){
+          var testId = ret._id;
+          User.findById(testId.toString(), function(ret1){
+            expect(ret1.name).to.equal('Sam');
+            done();
+          });
         });
       });
     });
@@ -100,11 +137,11 @@ describe('User', function(){
 
   describe('.findByName', function(){
     it('should find a user by his name', function(done){
-      u1 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u1.save(function(){
+      u1 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_FINDBYNAME@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u1.register(function(){
         User.findByName('Sam', function(ret){
           expect(ret.name).to.equal('Sam');
-          expect(ret.email).to.equal('sam@aol.com');
+          expect(ret.email).to.equal('max.vance+FINDMYFANS_UNIT_TEST_FINDBYNAME@gmail.com');
           done();
         });
       });
@@ -113,7 +150,7 @@ describe('User', function(){
 
   describe('findByEmailAndPassword', function(){
     it('should return a user by email and password', function(done){
-      User.findByEmailAndPassword('sue@aol.com', '678utf', function(record){
+      User.findByEmailAndPassword('max.vance+FINDMYFANS_UNIT_TEST_BEFOREEACH@gmail.com', '678utf', function(record){
         expect(record._id).to.deep.equal(u1._id);
         done();
       });
@@ -125,7 +162,7 @@ describe('User', function(){
       });
     });
     it('should not return a user with wrong password', function(done){
-      User.findByEmailAndPassword('sue@aol.com', '402fij', function(record){
+      User.findByEmailAndPassword('max.vance+FINDMYFANS_UNIT_TEST_BEFOREEACH@gmail.com', '402fij', function(record){
         expect(record).to.be.false;
         done();
       });
@@ -134,10 +171,11 @@ describe('User', function(){
 
   describe('findByEmail', function(){
     it('should return a user by email', function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u2.save(function(ret){
-        User.findByEmail('sam@aol.com', function(record){
-          expect(record._id).to.deep.equal(ret._id);
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_FINDBYEMAIL@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2.register(function(err, ret){
+        User.findByEmail('max.vance+FINDMYFANS_UNIT_TEST_FINDBYEMAIL@gmail.com', function(record){
+          //we can't run the following test based on ID since user.register doesn't return the registered user
+          expect(record.name).to.equal('Sam');
           done();
         });
       });
@@ -146,29 +184,33 @@ describe('User', function(){
 
   describe('#update', function(){
     beforeEach(function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u2.save(function(){
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_UPDATE@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2.register(function(){
         done();
       });
     });
     it('should update an existing user', function(done){
-      u2.email = 'robert@aol.com';
-      u2.update(function(user){
-        expect(user.email).to.equal('robert@aol.com');
-        expect(user._id).to.deep.equal(u2._id);
-        done();
+      User.findByEmail('max.vance+FINDMYFANS_UNIT_TEST_UPDATE@gmail.com', function(record){
+        record = new User(record);
+        record.email = 'max.vance+FINDMYFANS_UNIT_TEST_NEW_EMAIL@gmail.com';
+        record.update(function(updatedUser){
+          expect(updatedUser.email).to.equal('max.vance+FINDMYFANS_UNIT_TEST_NEW_EMAIL@gmail.com');
+          expect(updatedUser._id).to.deep.equal(record._id);
+          expect(updatedUser.password).to.have.length(60);
+          done();
+        });
       });
     });
   });
 
   describe('#addPhoto', function(){
     it('should add a photo to the user profile', function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_ADDPHOTO@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
       var oldName = __dirname + '/../fixtures/testpic-copy.jpg';
       u2.addPhoto(oldName, function(){
-        u2.save(function(record){
+        u2.register(function(err, record){
           User.findById(u2._id.toString(), function(record){
-            expect(record.photo).to.deep.equal('/img/samaolcom/profile.jpg');
+            expect(record.photo).to.deep.equal('/img/maxvance+findmyfans_unit_test_addphotogmailcom/profile.jpg');
             done();
           });
         });
@@ -178,8 +220,8 @@ describe('User', function(){
 
   describe('addTeam', function(){
     it('should add a team to the user\'s teams', function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u2.save(function(){
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_ADDTEAM@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2.register(function(){
         u2.addTeam('Tennessee Titans', function(){
           User.findById(u2._id.toString(), function(record){
             expect(record.teams).to.have.length(2);
@@ -194,8 +236,8 @@ describe('User', function(){
 
   describe('removeTeam', function(){
     it('should remove a team from the user\'s teams', function(done){
-      u2 = new User({name: 'Sam', email:'sam@aol.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
-      u2.save(function(){
+      u2 = new User({name: 'Sam', email:'max.vance+FINDMYFANS_UNIT_TEST_REMOVETEAM@gmail.com', password:'678utf', description:'my name is sam', teams:['Nashville Predators'], home:'Nashville, TN'});
+      u2.register(function(){
         u2.removeTeam('Nashville Predators', function(){
           User.findById(u2._id.toString(), function(record){
             expect(record.teams).to.have.length(0);

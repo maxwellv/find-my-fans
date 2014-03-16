@@ -1,7 +1,7 @@
 'use strict';
 
 var User = require('../models/user');
-var sendEmail = require('../lib/send-email');
+//var sendEmail = require('../lib/send-email');
 
 exports.auth = function(req, res){
   res.render('user/auth', {title:'User Authentication'});
@@ -14,6 +14,18 @@ exports.show = function(req, res){
   });
 };
 
+exports.create = function(req, res){
+  var newUser = new User(req.body);
+  newUser.register(function(err, body){
+    if (!err){
+      res.redirect('/');
+    } else {
+      res.render('user/auth', {title: 'Register a new user (ERROR: EMAIL ALREADY IN USE)'});
+    }
+  });
+};
+
+/*
 exports.register = function(req, res){
   var used = new User(req.body);
   used.hashPassword(function(){
@@ -42,6 +54,7 @@ exports.register = function(req, res){
     }
   });
 };
+*/
 
 exports.login = function(req, res){
   User.findByEmailAndPassword(req.body.email, req.body.password, function(ret){

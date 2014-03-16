@@ -19,7 +19,7 @@ function load(app, fn){
 
   app.get('/', d, home.index);
   app.get('/auth', d, users.auth);
-  app.post('/auth', d, users.register);
+  app.post('/auth', d, users.create);
   app.post('/login', d, users.login);
   app.post('/logout', d, users.logout);
   app.get('/teams', d, teams.index);

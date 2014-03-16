@@ -7,6 +7,7 @@ var User;
 var users = global.nss.db.collection('users');
 var fs = require('fs');
 var path = require('path');
+var email = require('../lib/send-email');
 
 module.exports = User;
 function User(user){
@@ -17,7 +18,26 @@ function User(user){
   this.description = user.description;
   this.teams = user.teams;
   this.home = user.home;
+  this._id = user._id ? Mongo.ObjectID(user._id.toString()) : undefined;
 }
+
+User.prototype.register = function(fn){
+  var self = this;
+  hashPassword(self.password, function(hashed){
+    self.password = hashed;
+    dupeCheck(self.email, self.name, function(dupeResult){
+      if (dupeResult){ //dupeCheck will return true if there is NOT a duplicate email in the DB
+        insert(self, function(err, inserted){
+          email.sendWelcome({to:self.email}, function(err, body){
+            fn(err, body);
+          });
+        });
+      } else {
+        fn('You tried to register a duplicate user.');
+      }
+    });
+  });
+};
 
 User.prototype.addTeam = function(teamToAdd, fn){
   this.teams.push(teamToAdd);
@@ -29,15 +49,35 @@ User.prototype.removeTeam = function(teamToRemove, fn){
   this.update(fn);
 };
 
-User.prototype.hashPassword = function(fn){
-  var self = this;
-
-  bcrypt.hash(self.password, 8,function(err, hash){
-    self.password = hash;
-    fn();
+function hashPassword(password, fn){
+  bcrypt.hash(password, 8,function(err, hash){
+    fn(hash);
   });
-};
+}
 
+function dupeCheck(email, name, fn){
+  users.findOne({email: email}, function(err, foundUser){
+    if (foundUser === null){
+      users.findOne({name:name}, function(err, foundUser2){
+        if (foundUser2 === null){
+          fn(true);
+        } else {
+          fn(false);
+        }
+      });
+    } else {
+      fn(false);
+    }
+  });
+}
+
+function insert(user, fn){
+  users.insert(user, function(err, record){
+    fn(err);
+  });
+}
+
+/*
 User.prototype.save = function(fn){
   var self = this;
   users.findOne({email: self.email}, function(err, record){
@@ -56,6 +96,7 @@ User.prototype.save = function(fn){
     }
   });
 };
+*/
 
 User.findById = function(id, fn){
   var _id = new Mongo.ObjectID(id);

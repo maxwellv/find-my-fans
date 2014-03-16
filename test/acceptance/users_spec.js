@@ -22,6 +22,7 @@ describe('users', function(){
   });
 
   beforeEach(function(done){
+    this.timeout(5000); //extra time since we are sending an email here
     var testdir = __dirname + '/../../app/static/img/samaolcom/prof*';
     var cmd = 'rm -rf ' + testdir;
     exec(cmd, function(){
@@ -29,11 +30,9 @@ describe('users', function(){
       var copyfile = __dirname + '/../fixtures/testpic-copy.jpg';
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile));
       global.nss.db.dropDatabase(function(err, result){
-        u1 = new User({name:'Sam', email:'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com', password:'678utf'});
-        u1.hashPassword(function(){
-          u1.save(function(){
-            done();
-          });
+        u1 = new User({name:'Sam', email:'max.vance+FINDMYFANS_ACCEPTANCE_TEST_BEFOREEACH@gmail.com', password:'678utf'});
+        u1.register(function(err, ret){
+          done();
         });
       });
     });
@@ -65,7 +64,7 @@ describe('users', function(){
       request(app)
       .post('/auth')
       .field('name', 'Bob')
-      .field('email', 'max.vance+ACCEPTANCE_TEST_BOB@gmail.com')
+      .field('email', 'max.vance+FINDMYFANS_ACCEPTANCE_TEST_BOB@gmail.com')
       .field('password', '1234')
       .attach('photo', file)
       .end(function(err, res){
@@ -78,7 +77,7 @@ describe('users', function(){
       request(app)
       .post('/auth')
       .field('name', 'Sam')
-      .field('email', 'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
+      .field('email', 'max.vance+FINDMYFANS_ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
       .field('password', '123456')
       .attach('photo', file)
       .end(function(err, res){
@@ -93,7 +92,7 @@ describe('users', function(){
     it('should log in a good user', function(done){
       request(app)
       .post('/login')
-      .field('email', 'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
+      .field('email', 'max.vance+FINDMYFANS_ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
       .field('password', '678utf')
       .end(function(err, res){
         console.log('res.body.biatches');

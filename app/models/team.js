@@ -33,7 +33,7 @@ Team.autoCreate = function(data, fn){
   var dbData = [];
   for(var i=0; i<data.length; i++){
     var team = new Team(data[i]);
-    team.insert(function(records){
+    team.insert(function(records){//TODO: fix this, making functions inside a loop is a bad idea
       dbData.push(records[0]);
     });
   }

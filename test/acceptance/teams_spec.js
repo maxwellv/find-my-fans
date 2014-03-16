@@ -23,14 +23,9 @@ describe('teams', function(){
 
   beforeEach(function(done){
     global.nss.db.dropDatabase(function(err, result){
-      sue = new User({email:'sue@aol.com', password:'abcd'});
-      sue.hashPassword(function(){
-        sue.save(function(){
-          var team = new Team({city: 'Houston', name: 'Texans', color: 'blue', sportName: 'football'});
-          team.insert(function(){
-            done();
-          });
-        });
+      sue = new User({email:'sue@nomail.com', password:'abcd'});
+      sue.register(function(err){
+        done();
       });
     });
   });
@@ -49,7 +44,7 @@ describe('teams', function(){
     beforeEach(function(done){
       request(app)
       .post('/login')
-      .field('email', 'sue@aol.com')
+      .field('email', 'sue@nomail.com')
       .field('password', 'abcd')
       .end(function(err, res){
         cookie = res.headers['set-cookie'];
