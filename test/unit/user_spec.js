@@ -11,7 +11,8 @@ var Mongo = require('mongodb');
 var u1, u2;
 
 describe('User', function(){
-  this.timeout(5000); //email testing takes a while to execute, so I'm giving all tests five seconds to run
+  this.timeout(10000);
+  //email testing takes a while to execute, especially from Travis, so I'm giving all tests ten seconds to run
 
   before(function(done){
     var initMongo = require('../../app/lib/init-mongo');
@@ -22,7 +23,7 @@ describe('User', function(){
   });
 
   beforeEach(function(done){
-    var testdir = __dirname + '/../../app/static/img/samaolcom/prof*';
+    var testdir = __dirname + '/../../app/static/img/maxvance+findmyfans_unit_test_addphotogmailcom/prof*';
     var cmd = 'rm ' + testdir;
     exec(cmd, function(){
       var origfile = __dirname + '/../fixtures/testpic.jpg';
