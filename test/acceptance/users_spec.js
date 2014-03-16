@@ -29,7 +29,7 @@ describe('users', function(){
       var copyfile = __dirname + '/../fixtures/testpic-copy.jpg';
       fs.createReadStream(origfile).pipe(fs.createWriteStream(copyfile));
       global.nss.db.dropDatabase(function(err, result){
-        u1 = new User({name:'Sam', email:'sam@aol.com', password:'678utf'});
+        u1 = new User({name:'Sam', email:'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com', password:'678utf'});
         u1.hashPassword(function(){
           u1.save(function(){
             done();
@@ -65,7 +65,7 @@ describe('users', function(){
       request(app)
       .post('/auth')
       .field('name', 'Bob')
-      .field('email', 'bob@aol.com')
+      .field('email', 'max.vance+ACCEPTANCE_TEST_BOB@gmail.com')
       .field('password', '1234')
       .attach('photo', file)
       .end(function(err, res){
@@ -78,7 +78,7 @@ describe('users', function(){
       request(app)
       .post('/auth')
       .field('name', 'Sam')
-      .field('email', 'sam@aol.com')
+      .field('email', 'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
       .field('password', '123456')
       .attach('photo', file)
       .end(function(err, res){
@@ -93,7 +93,7 @@ describe('users', function(){
     it('should log in a good user', function(done){
       request(app)
       .post('/login')
-      .field('email', 'sam@aol.com')
+      .field('email', 'max.vance+ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
       .field('password', '678utf')
       .end(function(err, res){
         console.log('res.body.biatches');
