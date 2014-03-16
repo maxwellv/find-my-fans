@@ -1,13 +1,35 @@
+/*jshint loopfunc: true */
 'use strict';
 
 var Team = require('../models/team');
-/*
+var User = require('../models/user');
+
 exports.index = function(req, res){
-  Team.findByUser(req.session.userId, function(teams){
-    res.render('home/index', {title:'find-by-fans', teams:teams});
+  console.log('----INDEX:req.params.userId----');
+  console.log(req.params.id);
+  User.findById(req.params.id, function(user){
+    console.log('----INDEX:user----');
+    console.log(user);
+    if(user.teams!==null){
+      var teams = user.teams;
+      var results = [];
+      for(var i=0; i<teams.length; i++){
+        var temp = teams[i].toString();
+        Team.findById(temp, function(record){
+          console.log('TEMP!!!!!!');
+          console.log(temp);
+          console.log('TEAM!!!!!!');
+          console.log(record);
+          results.push(record);
+        });
+      }
+      res.send({records:results});
+    }else{
+      res.send({records:'User has no teams'});
+    }
   });
 };
-*/
+
 exports.showBySport = function(req, res){
   Team.findBySportName(req.params.sportName, function(teams){
     res.render('home/index', {title: 'teams by sport', teams:teams});
@@ -20,7 +42,10 @@ exports.getTeams = function(req, res){
 };
 
 exports.insert = function(req, res){
-  res.send({dataTest:req.body});
+  var team = new Team(req.body);
+  team.insert(function(err, record){
+    res.send(record);
+  });
 };
 
 exports.populate = function(req, res){

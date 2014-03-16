@@ -4,7 +4,7 @@
 process.env.DBNAME = 'team2-test';
 var app = require('../../app/app');
 var request = require('supertest');
-//var expect = require('chai').expect;
+var expect = require('chai').expect;
 //var exec = require('child_process').exec;
 var User, Team;
 var sue;
@@ -23,19 +23,20 @@ describe('teams', function(){
 
   beforeEach(function(done){
     global.nss.db.dropDatabase(function(err, result){
-      sue = new User({email:'sue@nomail.com', password:'abcd'});
+      sue = new User({email:'sue@nomail.com', password:'abcd', teams:[]});
       sue.register(function(err){
         done();
       });
     });
   });
-/*
 
+  /*
   describe('GET /teams', function(){
     it('should get not teams because not logged in', function(done){
       request(app)
-      .get('/teams')
+      .get('/teams/user/'+sue._id)
       .expect(302, done);
+      console.log(res.body);
     });
   });
 */
@@ -54,19 +55,41 @@ describe('teams', function(){
 
     describe('GET /teams/:sportName', function(){
       it('should get teams by sport', function(done){
-        console.log('GET BY SPORT NAME!!!!');
+        //console.log('GET BY SPORT NAME!!!!');
         request(app)
         .get('/teams/football')
         .set('cookie', cookie)
         //.expect(200);
         .end(function(err, res){
-          console.log(err);
+          //console.log(err);
           done();
         });
         //done();
       });
     });
 
+    describe('GET /teams/user/:id', function(){
+      it('should get teams by user', function(done){
+        var t1 = new Team({name:'Titans',
+                           city:'Nashville',
+                           color:'Blue'});
+        t1.insert(function(){
+          sue.teams = [t1._id];
+          sue.update(function(){
+            console.log('GET BY USER!!!!');
+            request(app)
+            .get('/teams/user/'+sue._id)
+            .set('cookie', cookie)
+            .end(function(err, res){
+              console.log(res.body);
+              done();
+            });
+          });
+        });
+      });
+    });
+
+    /*
     describe('POST /teams', function(){
       it('should insert a new team object in the db', function(done){
         var t1 = new Team({name:'Titans',
@@ -78,12 +101,13 @@ describe('teams', function(){
         .set('cookie', cookie)
         .end(function(err, res){
           console.log(res.body);
+          expect(404);
           done();
         });
         //.expect(404, done);
       });
     });
-
+*/
   //end of auth
   });
 

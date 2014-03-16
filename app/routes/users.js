@@ -39,8 +39,8 @@ exports.register = function(req, res){
             sendEmail(req, res, {
               from: 'noreply@fakesite.com',
               to: ret.email,
-              subject: 'You have registered for Barter Town',
-              text:'This is an email confirming your registration for Barter Town. You have registered as ' + ret.name + '.'
+              subject: 'You have registered for Find My Fans',
+              text:'This is an email confirming your registration for Find My Fans. You have registered as ' + ret.name + '.'
             }, function(){
               res.redirect('/');
             });
