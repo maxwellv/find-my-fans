@@ -22,7 +22,7 @@ describe('users', function(){
   });
 
   beforeEach(function(done){
-    this.timeout(5000); //extra time since we are sending an email here
+    this.timeout(10000); //extra time since we are sending an email here
     var testdir = __dirname + '/../../app/static/img/samaolcom/prof*';
     var cmd = 'rm -rf ' + testdir;
     exec(cmd, function(){
