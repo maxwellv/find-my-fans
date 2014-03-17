@@ -1,0 +1,6 @@
+extends ../shared/template
+
+block content
+  h1 This is the page for showing all meetups.
+  each meetup in meetups
+    a(href='/meetups/'+ meetup._id.toString()) #{meetup.sportName} meetup in #{meetup.city}

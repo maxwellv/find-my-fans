@@ -17,23 +17,17 @@ html(class='no-js', lang='en')
         li.toggle-topbar.menu-icon
           a(href="#") Menu
       section.top-bar-section
-        ul.left
         ul.right
-          li: a(href="/") Home
-          if user
+            li: a(href="/") Home
             li.divider
             li: a(href="/")
             li.divider
             li: a(href="/")
             li.has-form
-              form(action='/logout', method='post')
-                button.small.alert= user.email
-          else
+            li: a(href="/auth") Register/login
             li.divider
-            li: a(href="/auth") Register/Login
-    .row
-      .small-12.columns
-        h1=title
+              form(action='/logout', method='post')
+                button.small.alert logout
     .row
       .small-12.columns
         block content

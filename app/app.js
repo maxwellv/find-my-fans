@@ -10,6 +10,10 @@ var RedisStore = require('connect-redis')(session);
 var initMongo  = require('./lib/init-mongo');
 var initRoutes = require('./lib/init-routes');
 
+//var lookupUser = require('./lib/lookup-user');
+//var bounceUser = require('./lib/bounce-user');
+//var getGames = require('./lib/get-games');
+
 var app = express();
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
@@ -29,6 +33,11 @@ app.use(express.session({
   secret: 'change-this-to-a-super-secret-message',
   cookie: { maxAge: 24 * 60 * 60 * 1000 }
 }));
+
+//app.use(lookupUser);
+//app.use(bounceUser);
+//app.use(getGames);
+
 app.use(app.router);
 /* --- pipeline ends   */
 

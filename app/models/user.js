@@ -28,7 +28,7 @@ User.prototype.register = function(fn){
     dupeCheck(self.email, self.name, function(dupeResult){
       if (dupeResult){ //dupeCheck will return true if there is NOT a duplicate email in the DB
         insert(self, function(err, inserted){
-          email.sendWelcome({to:self.email}, function(err, body){
+          email.sendWelcome({to:self.email, name:self.name}, function(err, body){
             fn(err, body);
           });
         });
