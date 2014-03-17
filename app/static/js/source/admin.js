@@ -13,15 +13,7 @@
     $('#teamNews').change(pullDbGames);
   }
 
-  /*
-  function getAllTeams(){
-    getTeams('hockey');
-    getTeams('football');
-    getTeams('basketball');
-    getTeams('baseball');
-  }
-*/
-
+  ///////GET TEAMS///////
   function getTeams(){
     var sport = $('#sportTeam').val().toLowerCase();
     var url = 'http://api.espn.com/v1/sports'+sport+'/teams/?apikey=cg47xhrsmt7feuzhf5b3dsjv';
@@ -41,10 +33,13 @@
     console.log('teamsSent called :', data);
   }
 
+  ///////GET NEWS///////
+
+  //sending teams, not news!!! FIX
   //MUST REGEX FOR t value
   //ex: 's:70~l:90~t:27' becomes 27
   function getNews(){
-    var teamId = $('#gameNews').val();
+    var teamId = $('#teamNews').val();
     console.log('getNews: '+teamId);
     var url = 'http://api.espn.com/v1/sports/hockey/nhl/teams/'+teamId+'/news?apikey=cg47xhrsmt7feuzhf5b3dsjv';
     $.getJSON(url, receiveNews);
@@ -61,6 +56,7 @@
   }
 
   function appendTeams(data){
+    $('#teamNews').empty();
     var teams = data.teams;
     for(var i=0; i<teams.length; i++){
       var teamData = teams[i];
@@ -90,22 +86,22 @@
     }
   }
 
+
+
+  ///////GET GAMES///////
   function getGames(data){
     //'http://api.seatgeek.com/2/events?performers.slug=memphis-grizzlies';
     console.log('GET GAMES CALLED');
     var allTeams = data.teams;
     var teamNames = [];
-
     _.each(allTeams, function(team){
       var teamName = (team.city + '-' +team.name).replace('.', '').replace(' ', '-').toLowerCase();
       teamNames.push(teamName);
     });
-
     _.each(teamNames, function(teamName){
       var url = 'http://api.seatgeek.com/2/events?performers.slug=' + teamName;
       $.getJSON(url, gamesGot);
     });
-
   }
 
   function gamesGot(data){
@@ -113,7 +109,6 @@
     var type = 'POST';
     var success = gamesSent;
     $.ajax({url:url, type:type, success:success, data:data});
-
     console.log('games got called: ', data);
   }
 

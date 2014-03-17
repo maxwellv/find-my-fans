@@ -64,7 +64,7 @@ Meetup.findByAttendee = function(attendee, fn){
 }
 
 Meetup.findByTeam = function(team, fn){
-  meetups.find({team: {$in: [team]}}).toArray(function(err, records){
+  meetups.find({teams: {$in: [team]}}).toArray(function(err, records){
     fn(records);
   });
 }

@@ -1,7 +1,7 @@
 /* jshint expr:true */
 'use strict';
 
-process.env.DBNAME = 'findMyFans-test';
+process.env.DBNAME = 'find-my-fans-test';
 var expect = require('chai').expect;
 //var Mongo = require('mongodb');
 var Meetup, meetups;
