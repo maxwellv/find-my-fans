@@ -6,6 +6,7 @@ var User = require('../models/user');
 exports.auth = function(req, res){
   res.render('user/auth', {title:'User Authentication'});
 };
+
 exports.show = function(req, res){
   console.log('USER'+req.params.user);
   User.findByName(req.params.user, function(user){
@@ -16,11 +17,11 @@ exports.show = function(req, res){
 
 exports.create = function(req, res){
   var newUser = new User(req.body);
-  newUser.register(function(err, body){
-    if (!err){
+  newUser.register(function(){
+    if (newUser._id){
       res.redirect('/');
     } else {
-      res.render('user/auth', {title: 'Register a new user (ERROR: EMAIL ALREADY IN USE)'});
+      res.render('user/auth', {title: 'Registeration error, try again'});
     }
   });
 };
@@ -63,7 +64,7 @@ exports.login = function(req, res){
         req.session.userId = ret._id.toString();
         req.session.save(function(){
           console.log('ooooooooooooooooooooo', req.session);
-          res.send({success:true, user:ret});
+          res.redirect('/');
         });
       });
     }else{

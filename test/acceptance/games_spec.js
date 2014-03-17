@@ -6,17 +6,18 @@ var app = require('../../app/app');
 var request = require('supertest');
 var expect = require('chai').expect;
 //var exec = require('child_process').exec;
-var User, Team;
+var User, Team, Game;
 var sue;
 var cookie;
 
-describe('teams', function(){
+describe('games', function(){
   before(function(done){
     request(app)
     .get('/')
     .end(function(err, res){
       User = require('../../app/models/user');
       Team = require('../../app/models/team');
+      Game = require('../../app/models/game');
       done();
     });
   });
@@ -53,31 +54,31 @@ describe('teams', function(){
       });
     });
 
-    describe('GET /teams/:sportName', function(){
-      it('should get teams by sport', function(done){
-        var t1 = new Team({name:'Titans',
-                           city:'Nashville',
-                           color:'Blue',
-                           sportName:'football'});
-        t1.insert(function(){
+    describe('GET /games/:sportName', function(){
+      it('should get games by sport', function(done){
+        var obj1 = {teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/16/14 ', sportName:'basketball'}; //dateTime notation is not exact
+        var game1 = new Game(obj1);
+        game1.insert(function(){
+          console.log(game1);
           console.log('GET BY SPORT NAME!!!!');
           request(app)
-          .get('/teams/football')
+          .get('/games/basketball')
           .set('cookie', cookie)
           //.expect(200);
           .end(function(err, res){
+            console.log(res.body);
             done();
           });
         });
       });
     });
 
-    describe('GET /teams/user/:id', function(){
-      it('should get teams by user', function(done){
-        var t1 = new Team({name:'Titans',
-                           city:'Nashville',
-                           color:'Blue'});
-        t1.insert(function(){
+/*
+    describe('GET /games/user/:id', function(){
+      it('should get games by user', function(done){
+        var obj1 = {teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/16/14 ', sportName:'basketball'}; //dateTime notation is not exact
+        var game1 = new Game(obj1);
+        game1.insert(function(){
           sue.teams = [t1._id];
           sue.update(function(){
             request(app)
@@ -107,7 +108,7 @@ describe('teams', function(){
         //.expect(404, done);
       });
     });
-
+*/
   //end of auth
   });
 

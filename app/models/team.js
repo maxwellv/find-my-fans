@@ -57,7 +57,6 @@ Team.prototype.update = function(fn){
 };
 
 Team.findById = function(_id, fn){
-  //_id = Mongo.ObjectID(_id);
 
   teams.findOne({_id:_id}, function(err, record){
     fn(record);

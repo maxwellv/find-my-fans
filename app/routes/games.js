@@ -3,8 +3,10 @@
 
 var Team = require('../models/team');
 var User = require('../models/user');
+var Game = require('../models/game');
 
-//finds all teams for a particular user
+/*
+//finds all games for a particular user
 exports.index = function(req, res){
   console.log('----INDEX:req.params.userId----');
   console.log(req.params.id);
@@ -30,11 +32,12 @@ exports.index = function(req, res){
     }
   });
 };
+*/
 
 exports.showBySport = function(req, res){
-  Team.findBySportName(req.params.sportName, function(teams){
-    res.render('home/index', {title: 'teams by sport', teams:teams});
-    res.send({teams:teams});
+  Game.findBySportName(req.params.sportName, function(games){
+    //res.render('home/index', {title: 'teams by sport', teams:teams});
+    res.send({games:games});
   });
 };
 
