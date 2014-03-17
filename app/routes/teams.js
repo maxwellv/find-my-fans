@@ -33,7 +33,7 @@ exports.index = function(req, res){
 
 exports.showBySport = function(req, res){
   Team.findBySportName(req.params.sportName, function(teams){
-    res.render('home/index', {title: 'teams by sport', teams:teams});
+    //res.render('home/index', {title: 'teams by sport', teams:teams});
     res.send({teams:teams});
   });
 };
@@ -69,8 +69,8 @@ exports.populate = function(req, res){
     object.schedule = [];     //WATCH FOR BUGS LATER!
     teamData.push(object);
   }
-  //Team.autoCreate(teamData, function(records){
-  //  dbData.push(records);
-  //});
+  Team.autoCreate(teamData, function(records){
+    dbData.push(records);
+  });
   res.send({teamData:teamData, dbData:dbData});
 };

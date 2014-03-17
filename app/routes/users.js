@@ -16,9 +16,10 @@ exports.show = function(req, res){
 };
 
 exports.create = function(req, res){
+  console.log('USERS EXPORTS CREATE: ', req.body);
   var newUser = new User(req.body);
-  newUser.register(function(){
-    if (newUser._id){
+  newUser.register(function(err, body){
+    if (!err){
       res.redirect('/');
     } else {
       res.render('user/auth', {title: 'Registeration error, try again'});

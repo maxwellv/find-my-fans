@@ -17,6 +17,7 @@ function load(app, fn){
   var users = require('../routes/users');
   var teams = require('../routes/teams');
   var games = require('../routes/games');
+  var meetups = require('../routes/meetups');
 
   app.get('/', d, home.index);
   app.get('/auth', d, users.auth);
@@ -27,9 +28,14 @@ function load(app, fn){
   app.get('/teams/user/:id', d, teams.index);
   app.get('/teams/:sportName', d, teams.showBySport);
   app.post('/teams', d, teams.insert);
-  app.get('/games/user/:id', d, games.showByUser);
+  app.post('/games/populate', d, games.populate);
+  //app.get('/games/user/:id', d, games.showByUser);
   app.get('/games/:sportName', d, games.showBySport);
   app.get('/admin/get-teams', d, teams.getTeams);
+  app.get('/meetups', d, meetups.show);
+  app.get('/meetups/create-meetup', d, meetups.createMeetup);
+  app.post('/meetups', d, meetups.create);
+  app.get('/meetups/:id', d, meetups.showMeetup);
   console.log('Routes Loaded');
   fn();
 }

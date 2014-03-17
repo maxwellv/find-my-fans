@@ -1,8 +1,8 @@
-/*jshint loopfunc: true */
+/*jshint loopfunc:true, camelcase:false */
 'use strict';
 
 var Team = require('../models/team');
-var User = require('../models/user');
+//var User = require('../models/user');
 var Game = require('../models/game');
 
 /*
@@ -53,27 +53,28 @@ exports.insert = function(req, res){
 };
 
 exports.populate = function(req, res){
-  var sportName = req.body.sports[0].name;
-  var leagueShortName = req.body.sports[0].leagues[0].shortName;
-  var leagueName = req.body.sports[0].leagues[0].name;
-  var teams = req.body.sports[0].leagues[0].teams;
-  var teamData = [];
-  var dbData = [];
-  for(var i=0; i<teams.length; i++){
-    var data = teams[i];
+  var games = req.body.events;
+  var gameData = [];
+  for(var i=0; i<games.length; i++){
+    var data = games[i];
     var object = {};
-    object._id = data.uid;
-    object.name = data.name;
-    object.sportName = sportName;
-    object.leagueShortName = leagueShortName;
-    object.leagueName = leagueName;
-    object.city = data.location;
-    object.color = data.color;
-    object.schedule = [];     //WATCH FOR BUGS LATER!
-    teamData.push(object);
+    object.teams = [];     //WATCH FOR BUGS LATER!
+    var tempTeams = [data.performers[0].short_name, data.performers[1].short_name];
+    for(var x=0; x<tempTeams.length; i++){
+      Team.findByName(tempTeams[i], function(team){
+        object.teams.push(team._id);
+      });
+    }
+    object._id = data.id;
+    object.title = data.title;
+    object.shortTitle = data.short_title;
+    object.sportName = data.taxonomies[1].name;
+    object.city = data.venue.city;
+    object.ticketURL  = data.url;
+    object.locationData = data.location;
+    gameData.push(object);
   }
-  //Team.autoCreate(teamData, function(records){
-  //  dbData.push(records);
-  //});
-  res.send({teamData:teamData, dbData:dbData});
+  Game.autoCreate(gameData, function(records){
+  });
+  res.send({gameData:gameData});
 };

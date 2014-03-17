@@ -4,7 +4,7 @@
 process.env.DBNAME = 'team2-test';
 var app = require('../../app/app');
 var request = require('supertest');
-var expect = require('chai').expect;
+//var expect = require('chai').expect;
 //var exec = require('child_process').exec;
 var User, Team, Game;
 var sue;

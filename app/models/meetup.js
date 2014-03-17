@@ -15,6 +15,8 @@ function Meetup(meetup){
   this.teams = meetup.teams || [];
   this.sportName = meetup.sportName;
   this.city = meetup.city;
+  this.loyalty = meetup.loyalty;
+  this.attendees = meetup.attendees|| [];
 }
 
 Meetup.prototype.insert = function(fn){
@@ -55,6 +57,19 @@ Meetup.findBySportName = function(sportName, fn){
   });
 };
 
+Meetup.findByAttendee = function(attendee, fn){
+  meetups.find({attendees: {$in: [attendee]}}).toArray(function(err, records){
+    fn(records);
+  });
+}
+
+Meetup.findByTeam = function(team, fn){
+  meetups.find({team: {$in: [team]}}).toArray(function(err, records){
+    fn(records);
+  });
+}
+
+/*
 Meetup.findByTeam = function(team, fn){
   meetups.find().toArray(function(err, records){
     var results = [];
@@ -68,6 +83,7 @@ Meetup.findByTeam = function(team, fn){
     fn(results);
   });
 };
+*/
 
 Meetup.findByCity = function(city, fn){
   meetups.find({city:city}).toArray(function(err, records){

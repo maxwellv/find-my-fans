@@ -1,3 +1,4 @@
+/*jshint loopfunc: true */
 'use strict';
 
 module.exports = Game;
@@ -15,6 +16,9 @@ function Game(game){
   this.dateTime = game.dateTime;
   this.sportName = game.sportName;
   this.apiId = game.apiId || ''; //for stubHub, seatGeek, etc.
+  this.title = game.title;
+  this.ticketURL = game.ticketURL || '';
+  this.locationData = game.locationData;
 }
 
 Game.prototype.insert = function(fn){
@@ -24,8 +28,18 @@ Game.prototype.insert = function(fn){
   });
 };
 
-Game.destroy = function(_id, fn){
+Game.autoCreate = function(data, fn){
+  var dbData = [];
+  for(var i=0; i<data.length; i++){
+    var game = new Game(data[i]);
+    game.insert(function(records){
+      dbData.push(records[0]);
+    });
+  }
+  fn(dbData);
+};
 
+Game.destroy = function(_id, fn){
   games.remove({_id:_id}, function(err, count){
     fn(count);
   });
