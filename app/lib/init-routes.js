@@ -24,6 +24,8 @@ function load(app, fn){
   app.post('/auth', d, users.create);
   app.post('/login', d, users.login);
   app.post('/logout', d, users.logout);
+  app.get('/team/:id', d, teams.getTeamById);
+  app.get('/teamName/:name', d, teams.getTeamByName);
   app.post('/teams/populate', d, teams.populate);
   app.get('/teams/user/:id', d, teams.index);
   app.get('/teams/:sportName', d, teams.showBySport);

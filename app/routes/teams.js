@@ -38,6 +38,18 @@ exports.showBySport = function(req, res){
   });
 };
 
+exports.getTeamById = function(req, res){
+  Team.findById(req.params.id, function(team){
+    res.send(team);
+  });
+};
+
+exports.getTeamByName = function(req, res){
+  Team.findByName(req.params.name, function(team){
+    res.send(team);
+  });
+};
+
 exports.getTeams = function(req, res){
   res.render('admin/get-teams');
 };
