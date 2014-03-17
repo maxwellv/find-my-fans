@@ -27,7 +27,7 @@ function load(app, fn){
   app.get('/teams/user/:id', d, teams.index);
   app.get('/teams/:sportName', d, teams.showBySport);
   app.post('/teams', d, teams.insert);
-  app.get('/games/user/:id', d, games.showByUser);
+  //app.get('/games/user/:id', d, games.showByUser);
   app.get('/games/:sportName', d, games.showBySport);
   app.get('/admin/get-teams', d, teams.getTeams);
   console.log('Routes Loaded');
