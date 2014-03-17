@@ -95,9 +95,7 @@ describe('users', function(){
       .field('email', 'max.vance+FINDMYFANS_ACCEPTANCE_TEST_BEFOREEACH@gmail.com')
       .field('password', '678utf')
       .end(function(err, res){
-        console.log('res.body.biatches');
-        console.log(res.body);
-        expect(res.body.success).to.equal(true);
+        expect(res.status).to.equal(302);
         done();
       });
     });
