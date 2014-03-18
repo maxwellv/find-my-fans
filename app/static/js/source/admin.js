@@ -10,7 +10,7 @@
     $('#getNews').click(getNews);
     $('#getGames').click(pullTeams);
     $('#sportNews').change(pullDbTeams);
-    $('#teamNews').change(pullDbGames);
+    //$('#teamNews').change(pullDbGames);
   }
 
   ///////GET TEAMS///////
