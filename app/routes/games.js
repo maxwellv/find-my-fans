@@ -53,10 +53,11 @@ exports.insert = function(req, res){
 };
 
 exports.populate = function(req, res){
+  console.log('GAMES POPULATE. REQ: ', req.body);
   Game.autoCreate(req.body, function(records){
     res.send(records);
   });
-}
+};
 
 /*
 exports.populate = function(req, res){

@@ -75,6 +75,7 @@ Team.findBySportName = function(sportName, fn){
 };
 
 Team.findByName = function(name, fn){
+  console.log('TEAM FIND BY NAME. NAME: ', name);
   teams.find({name:name}).toArray(function(err, records){
     fn(records);
   });

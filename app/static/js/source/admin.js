@@ -1,3 +1,5 @@
+/*jshint loopfunc:true, camelcase:false */
+
 (function(){
 
   'use strict';
@@ -119,14 +121,15 @@
   }
 
   function receiveTeam(team){
-    console.log('receiveGames: ', team);
+    console.log('receiveTeam: ', team);
     var teamName = (team.city + '-' +team.name).replace('.', '').replace(' ', '-').toLowerCase();
     var url = 'http://api.seatgeek.com/2/events?performers.slug=' + teamName;
-    console.log('url: ', url);
+    console.log('receiveTeam url: ', url);
     $.getJSON(url, formatGames);
   }
 
   function formatGames(req){
+    console.log('formatGames start: ', req);
     //only time req is used
     var games = req.events;
     var gameData = [];
@@ -135,10 +138,16 @@
       var object = {};
       object.teams = [];     //WATCH FOR BUGS LATER!
       var tempTeams = [data.performers[0].short_name, data.performers[1].short_name];
-      console.log('tempTeams: ', tempTeams);
+      console.log('formatGames tempTeams: ', tempTeams);
       for(var x=0; x<tempTeams.length; x++){
+        // POTENTIAL PROBLEMS:
+        // Callback function being used within loop. Data coming back after loop is finished.
+        // getTeamAgain is trying to get the teams' ids. It is searching by a shortened name, i.e. 'Predators', 'Maple Leafs'.
+        //   This will likely cause erroneous data to be returned, which will likely result in faulty games being listed to users.
+        //   Might be an impossible task from client-side.
         getTeamAgain(tempTeams[x], function(teamData){
-          object.teams.push(teamData._id);
+          console.log('formatGames for x. teamData', teamData);
+          object.teams.push(teamData[0]._id);
         });
       }
       object._id = data.id;
@@ -147,10 +156,10 @@
       object.sportName = data.taxonomies[1].name;
       object.city = data.venue.city;
       object.ticketURL  = data.url;
-      object.locationData = data.location;
+      object.locationData = data.venue.location;
       gameData.push(object);
     }
-    console.log('formatGames: ', gameData);
+    console.log('formatGames end: ', gameData);
     gamesGot(gameData);
   }
 
@@ -165,9 +174,8 @@
     var url = '/games/populate';
     var type = 'POST';
     var success = gamesSent;
-    $.ajax({url:url, type:type, success:success, data:data});
-    console.log('games got called: ', data);
     console.log('gamesGot: ', data);
+    $.ajax({url:url, type:type, success:success, data:data});
   }
 
   function gamesSent(data){
