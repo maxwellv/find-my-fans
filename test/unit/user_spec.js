@@ -59,6 +59,9 @@ describe('User', function(){
         expect(u1.password).to.have.length(60); //this checks for a hashed password
         expect(u1._id).to.be.instanceof(Mongo.ObjectID);
         body = JSON.parse(body);
+        if (body.id === undefined){
+          console.log('THIS TEST IS FAILING BECAUSE OF A MAILGUN ISSUE. Check app/lib/send-email.js and the MAILGUN environment variable to make sure the Mailgun URL and API key are correct.');
+        }
         expect(typeof body.id).to.equal('string');
         done();
       });

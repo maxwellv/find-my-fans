@@ -1,6 +1,7 @@
 'use strict';
 
 var User = require('../models/user');
+var Team = require('../models/team');
 //var sendEmail = require('../lib/send-email');
 
 exports.auth = function(req, res){
@@ -81,6 +82,79 @@ exports.logout = function(req, res){
     res.redirect('/');
   });
 };
+
+exports.showProfile = function(req, res){
+  var NFLTeams, NHLTeams, MLBTeams, NBATeams;
+  Team.findBySportName('football', function(teams){
+    NFLTeams = teams;
+    Team.findBySportName('hockey', function(teams){
+      NHLTeams = teams;
+      Team.findBySportName('baseball', function(teams){
+        MLBTeams = teams;
+        Team.findBySportName('basketball', function(teams){
+          NBATeams = teams;
+          res.render('user/editProfile', {title:'The title passed in by the route', NFLTeams:NFLTeams, NHLTeams:NHLTeams, MLBTeams:MLBTeams, NBATeams:NBATeams});
+        });
+      });
+    });
+  });
+};
+
+exports.updateUserInfo = function(req, res){
+  var id = req.session.userId;
+  User.findById(id, function(foundUser){
+    foundUser = new User(foundUser);
+    User.dupeCheckEmail(req.body.email, function(dupeOkayEmail){
+      if (!dupeOkayEmail.response && (dupeOkayEmail.failedOn.toString() === foundUser._id.toString())){
+        console.log('Successfully ignored a dupe on the email address.');
+        dupeOkayEmail.response = true;
+      } else {
+        console.log('Failed on a dupe email address and/or the user IDs did not match.');
+      }
+      User.dupeCheckName(req.body.name, function(dupeOkayName){
+        if (!dupeOkayName.response && (dupeOkayName.failedOn.toString() === foundUser._id.toString())){
+          console.log('Successfully ignored a dupe on the name.');
+          dupeOkayName.response = true;
+        } else {
+          console.log('Failed on a dupe user name and/or the user IDs did not match.');
+        }
+        var finalOkay = dupeOkayEmail.response && dupeOkayName.response;
+        if (finalOkay){
+          if (req.body.name){ //if the user didn't put in a name then this won't be executed
+            foundUser.name = req.body.name;
+          }
+          if (req.body.email){
+            foundUser.email = req.body.email;
+          }
+          foundUser.update(function(){
+            res.redirect('/profile');
+          });
+        } else {
+          res.redirect('/'); //need a better way of telling the user that the change didn't work
+        }
+      });
+    });
+  });
+};
+
+exports.updateFavoriteTeams = function(req, res){
+  var id = req.session.userId;
+  var newTeams = [];
+  User.findById(id, function(foundUser){
+    foundUser = new User(foundUser);
+    for (var x in req.body){
+      console.log('for loop: ', req.body[x]);
+      if (req.body[x] !== 'noTeam'){
+        newTeams.push(req.body[x]);
+      }
+    }
+    foundUser.teams = newTeams;
+    foundUser.update(function(){
+      res.redirect('/profile');
+    });
+  });
+};
+
 /*
 exports.show = function(req, res){
   User.findById(req.params.id, function(user){

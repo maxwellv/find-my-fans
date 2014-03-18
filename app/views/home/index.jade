@@ -1,4 +1,5 @@
 extends ../shared/template
+script(src='../../static/js/source/news.js')
 
 block content
   if user
@@ -14,6 +15,13 @@ block content
             #city2 Tennessee
     .row
       .small-12.columns
+        #userTeams
+          each team in teams
+            .buttonWrap
+              .sport= team.leagueShortName
+              button.stuff= team.name
+    .row
+      .small-12.columns
         #newsFeed News Feed
           #red
           marquee(behavior='scroll', direction='left', scrollamount='7')#newsText  ...Teddy Bridgewater off target at Louisville’s pro day...
@@ -27,6 +35,9 @@ block content
         #sportBars Sport Bars
       .small-5.columns
         #map
+    .row
+      .small-12.columns
+        p#uid(style='visibility: hidden;')= userId
 
 
   else
