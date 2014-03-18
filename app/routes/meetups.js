@@ -1,3 +1,4 @@
+/*jshint loopfunc:true, camelcase:false */
 'use strict';
 
 var Meetup = require('../models/meetup');

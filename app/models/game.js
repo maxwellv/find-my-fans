@@ -29,6 +29,7 @@ Game.prototype.insert = function(fn){
 };
 
 Game.autoCreate = function(data, fn){
+  // This is where the games actually get added to the database
   console.log('GAME AUTO CREATE. DATA: ', data);
   games.insert(data.gamesArray, function(err, records){
     fn(records);

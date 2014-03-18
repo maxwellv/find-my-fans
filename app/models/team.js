@@ -56,6 +56,7 @@ Team.prototype.update = function(fn){
   });
 };
 
+
 Team.findById = function(_id, fn){
   teams.findOne({_id:_id}, function(err, record){
     fn(record);

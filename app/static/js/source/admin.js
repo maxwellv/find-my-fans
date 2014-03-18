@@ -12,9 +12,7 @@
     $('#getNews').click(getNews);
     $('#getGames').click(pullTeams);
     $('#sportNews').change(pullDbTeams);
-    $('#teamNews').change(pullDbGames);
     $('#sportGames').change(pullGameTeams);
-    //$('#teamGames').change(pullDbGames);
   }
 
   ///////GET TEAMS///////
@@ -44,6 +42,8 @@
   //ex: 's:70~l:90~t:27' becomes 27
   function getNews(){
     var teamId = $('#teamNews').val();
+    var chT = teamId.indexOf('t');
+    teamId = teamId.substr(chT+2);
     console.log('getNews: '+teamId);
     var url = 'http://api.espn.com/v1/sports/hockey/nhl/teams/'+teamId+'/news?apikey=cg47xhrsmt7feuzhf5b3dsjv';
     $.getJSON(url, receiveNews);
@@ -66,31 +66,10 @@
       var teamData = teams[i];
       var $team = $('<option>');
       $team.text(teamData.name);
-      $team.value = teamData._id;
+      $team.val(teamData._id);
       $('#teamNews').append($team);
     }
   }
-
-  function pullDbGames(){
-    var team = $('#teamNews').val();
-    console.log(team);
-    var url = '/games/:teamId';
-    $.getJSON(url, appendGames);
-  }
-
-  function appendGames(data){
-    var games = data.games;
-    for(var i=0; i<games.length; i++){
-      var gameData = games[i];
-      var $game = $('<option>');
-      var text = gameData.dateTime+'-'+gameData.title;
-      $game.text(text);
-      $game.value = gameData._id;
-      $('#gameNews').append($game);
-    }
-  }
-
-
 
   ///////GET GAMES///////
   function pullGameTeams(){

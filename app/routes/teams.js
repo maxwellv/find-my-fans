@@ -8,25 +8,28 @@ var User = require('../models/user');
 exports.index = function(req, res){
   console.log('----INDEX:req.params.userId----');
   console.log(req.params.id);
-  User.findById(req.params.id, function(user){
-    //console.log('----INDEX:user----');
-    //console.log(user);
+  var id = req.params.id.toString();
+  var records = [];
+
+  User.findById(id, function(user){
     if(user.teams!==null){
       var teams = user.teams;
-      var results = [];
+
       for(var i=0; i<teams.length; i++){
+        console.log(i);
         var temp = teams[i].toString();
         Team.findById(temp, function(record){
-          //console.log('TEMP!!!!!!');
-          //console.log(temp);
-          //console.log('TEAM!!!!!!');
-          //console.log(record);
-          results.push(record);
+          records.push(record);
         });
+
+        if(records.length===3){
+          console.log('DONE!', records);
+          res.send({records:records});
+        }
       }
-      res.send({records:results});
+
     }else{
-      res.send({records:'User has no teams'});
+      res.send({none:'User has no teams'});
     }
   });
 };
