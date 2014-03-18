@@ -57,7 +57,6 @@ Team.prototype.update = function(fn){
 };
 
 Team.findById = function(_id, fn){
-
   teams.findOne({_id:_id}, function(err, record){
     fn(record);
   });
@@ -76,6 +75,7 @@ Team.findBySportName = function(sportName, fn){
 };
 
 Team.findByName = function(name, fn){
+  console.log('TEAM FIND BY NAME. NAME: ', name);
   teams.find({name:name}).toArray(function(err, records){
     fn(records);
   });

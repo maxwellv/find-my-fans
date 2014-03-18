@@ -29,6 +29,7 @@ Game.prototype.insert = function(fn){
 };
 
 Game.autoCreate = function(data, fn){
+  console.log('GAME AUTO CREATE. DATA: ', data);
   var dbData = [];
   for(var i=0; i<data.length; i++){
     var game = new Game(data[i]);

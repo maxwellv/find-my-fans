@@ -1,3 +1,5 @@
+/*jshint loopfunc:true, camelcase:false */
+
 (function(){
 
   'use strict';
@@ -11,6 +13,8 @@
     $('#getGames').click(pullTeams);
     $('#sportNews').change(pullDbTeams);
     $('#teamNews').change(pullDbGames);
+    $('#sportGames').change(pullGameTeams);
+    //$('#teamGames').change(pullDbGames);
   }
 
   ///////GET TEAMS///////
@@ -89,18 +93,80 @@
 
 
   ///////GET GAMES///////
-  function getGames(data){
+  function pullGameTeams(){
+    var sport = $('#sportGames').val();
+    var url = '/teams/'+sport;
+    $.getJSON(url, appendGameTeams);
+  }
+
+  function appendGameTeams(data){
+    $('#teamGames').empty();
+    var teams = data.teams;
+    for(var i=0; i<teams.length; i++){
+      var teamData = teams[i];
+      var $team = $('<option>');
+      $team.text(teamData.name);
+      //$team.attr('data-id, teamData._id');
+      $team.val(teamData._id);
+      $('#teamGames').append($team);
+    }
+  }
+
+  function getGames(){
     //'http://api.seatgeek.com/2/events?performers.slug=memphis-grizzlies';
     console.log('GET GAMES CALLED');
-    var allTeams = data.teams;
-    var teamNames = [];
-    _.each(allTeams, function(team){
-      var teamName = (team.city + '-' +team.name).replace('.', '').replace(' ', '-').toLowerCase();
-      teamNames.push(teamName);
-    });
-    _.each(teamNames, function(teamName){
-      var url = 'http://api.seatgeek.com/2/events?performers.slug=' + teamName;
-      $.getJSON(url, gamesGot);
+    var which = $('#teamGames').val();
+    var url = '/team/'+which;
+    $.getJSON(url, receiveTeam);
+  }
+
+  function receiveTeam(team){
+    console.log('receiveTeam: ', team);
+    var teamName = (team.city + '-' +team.name).replace('.', '').replace(' ', '-').toLowerCase();
+    var url = 'http://api.seatgeek.com/2/events?performers.slug=' + teamName;
+    console.log('receiveTeam url: ', url);
+    $.getJSON(url, formatGames);
+  }
+
+  function formatGames(req){
+    console.log('formatGames start: ', req);
+    //only time req is used
+    var games = req.events;
+    var gameData = [];
+    for(var i=0; i<games.length; i++){
+      var data = games[i];
+      var object = {};
+      object.teams = [];     //WATCH FOR BUGS LATER!
+      var tempTeams = [data.performers[0].short_name, data.performers[1].short_name];
+      console.log('formatGames tempTeams: ', tempTeams);
+      for(var x=0; x<tempTeams.length; x++){
+        // POTENTIAL PROBLEMS:
+        // Callback function being used within loop. Data coming back after loop is finished.
+        // getTeamAgain is trying to get the teams' ids. It is searching by a shortened name, i.e. 'Predators', 'Maple Leafs'.
+        //   This will likely cause erroneous data to be returned, which will likely result in faulty games being listed to users.
+        //   Might be an impossible task from client-side.
+        getTeamAgain(tempTeams[x], function(teamData){
+          console.log('formatGames for x. teamData', teamData);
+          object.teams.push(teamData[0]._id);
+        });
+      }
+      object._id = data.id;
+      object.title = data.title;
+      object.shortTitle = data.short_title;
+      object.sportName = data.taxonomies[1].name;
+      object.city = data.venue.city;
+      object.ticketURL  = data.url;
+      object.locationData = data.venue.location;
+      gameData.push(object);
+    }
+    console.log('formatGames end: ', gameData);
+    gamesGot(gameData);
+  }
+
+  function getTeamAgain(which, fn){
+    var url = '/teamName/'+which;
+    $.getJSON(url, function(data){
+      fn(data);
     });
   }
 
@@ -108,8 +174,8 @@
     var url = '/games/populate';
     var type = 'POST';
     var success = gamesSent;
+    console.log('gamesGot: ', data);
     $.ajax({url:url, type:type, success:success, data:data});
-    console.log('games got called: ', data);
   }
 
   function gamesSent(data){

@@ -53,6 +53,15 @@ exports.insert = function(req, res){
 };
 
 exports.populate = function(req, res){
+  console.log('GAMES POPULATE. REQ: ', req.body);
+  Game.autoCreate(req.body, function(records){
+    res.send(records);
+  });
+};
+
+/*
+exports.populate = function(req, res){
+  console.log('GAMES POPULATE: ', req.body);
   var games = req.body.events;
   var gameData = [];
   for(var i=0; i<games.length; i++){
@@ -60,8 +69,8 @@ exports.populate = function(req, res){
     var object = {};
     object.teams = [];     //WATCH FOR BUGS LATER!
     var tempTeams = [data.performers[0].short_name, data.performers[1].short_name];
-    for(var x=0; x<tempTeams.length; i++){
-      Team.findByName(tempTeams[i], function(team){
+    for(var x=0; x<tempTeams.length; x++){
+      Team.findByName(tempTeams[x], function(team){
         object.teams.push(team._id);
       });
     }
@@ -74,7 +83,8 @@ exports.populate = function(req, res){
     object.locationData = data.location;
     gameData.push(object);
   }
-  Game.autoCreate(gameData, function(records){
-  });
+  //Game.autoCreate(gameData, function(records){
+  //});
   res.send({gameData:gameData});
 };
+*/
