@@ -17,17 +17,20 @@ html(class='no-js', lang='en')
         li.toggle-topbar.menu-icon
           a(href="#") Menu
       section.top-bar-section
+        ul.left
+          li.name
+            input#search(type='search', placeholder='search...', results='0')
         ul.right
             li: a(href="/") Home
             li.divider
             li: a(href="/")
             li.divider
             li: a(href="/")
-            li.has-form
-            li: a(href="/auth") Register/login
+              li.has-form
+            li: a(href="/auth", style='position: relative; top: -2px; left: -30px;') Register/login
             li.divider
               form(action='/logout', method='post')
-                button.small.alert logout
+                button.small.alert(style='position: relative; left: -32px; border: 1px solid whitesmoke;') logout
     .row
       .small-12.columns
         block content

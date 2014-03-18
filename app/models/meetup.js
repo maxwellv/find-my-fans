@@ -4,7 +4,7 @@
 module.exports = Meetup;
 var meetups = global.nss.db.collection('meetups');
 var Mongo = require('mongodb');
-var _ = require('lodash');
+//var _ = require('lodash');
 //var fs = require('fs');
 //var path = require('path');
 
@@ -61,13 +61,13 @@ Meetup.findByAttendee = function(attendee, fn){
   meetups.find({attendees: {$in: [attendee]}}).toArray(function(err, records){
     fn(records);
   });
-}
+};
 
 Meetup.findByTeam = function(team, fn){
   meetups.find({teams: {$in: [team]}}).toArray(function(err, records){
     fn(records);
   });
-}
+};
 
 /*
 Meetup.findByTeam = function(team, fn){
