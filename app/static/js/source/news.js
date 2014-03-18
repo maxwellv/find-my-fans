@@ -10,6 +10,7 @@
   function initialize(){
     //$('#getNews').click(getNews);
     getTeams();
+    test();
   }
 
   var uid = $('#uid').text();
@@ -24,6 +25,12 @@
   function receiveTeams(data){
     console.log(data);
   }
+
+  function test(){
+    console.log($('.teamid').text());
+  }
+
+
 
 })();
 

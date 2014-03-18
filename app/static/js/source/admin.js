@@ -45,7 +45,24 @@
     var chT = teamId.indexOf('t');
     teamId = teamId.substr(chT+2);
     console.log('getNews: '+teamId);
-    var url = 'http://api.espn.com/v1/sports/hockey/nhl/teams/'+teamId+'/news?apikey=cg47xhrsmt7feuzhf5b3dsjv';
+    var sport = $('#sportNews').val();
+    var league;
+    switch(sport){
+      case 'hockey':
+        league='nhl';
+        break;
+      case 'football':
+        league='nfl';
+        break;
+      case 'baseball':
+        league='mlb';
+        break;
+      case 'basketball':
+        league='nba';
+        break;
+      default:
+    }
+    var url = 'http://api.espn.com/v1/sports/'+sport+'/'+league+'/teams/'+teamId+'/news?apikey=cg47xhrsmt7feuzhf5b3dsjv';
     $.getJSON(url, receiveNews);
   }
 
