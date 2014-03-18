@@ -174,8 +174,10 @@
     var url = '/games/populate';
     var type = 'POST';
     var success = gamesSent;
+    var gamesObj = {};
+    gamesObj.gamesArray = data;
     console.log('gamesGot: ', data);
-    $.ajax({url:url, type:type, success:success, data:data});
+    $.ajax({url:url, type:type, success:success, data:gamesObj});
   }
 
   function gamesSent(data){
