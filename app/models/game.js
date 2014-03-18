@@ -29,14 +29,10 @@ Game.prototype.insert = function(fn){
 };
 
 Game.autoCreate = function(data, fn){
-  var dbData = [];
-  for(var i=0; i<data.length; i++){
-    var game = new Game(data[i]);
-    game.insert(function(records){
-      dbData.push(records[0]);
-    });
-  }
-  fn(dbData);
+  console.log('GAME AUTO CREATE. DATA: ', data);
+  games.insert(data.gamesArray, function(err, records){
+    fn(records);
+  });
 };
 
 Game.destroy = function(_id, fn){
