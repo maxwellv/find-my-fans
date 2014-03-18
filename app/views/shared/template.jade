@@ -26,11 +26,10 @@ html(class='no-js', lang='en')
             li: a(href="/")
             li.divider
             li: a(href="/")
-              li.has-form
+            li.has-form
             li: a(href="/auth", style='position: relative; top: -2px; left: -30px;') Register/login
-            li.divider
-              form(action='/logout', method='post')
-                button.small.alert(style='position: relative; left: -32px; border: 1px solid whitesmoke;') logout
+            li.has-form
+            li: a(href="/logout", style='position: relative; left: -30px') logout
     .row
       .small-12.columns
         block content
