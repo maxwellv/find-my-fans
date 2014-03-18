@@ -29,7 +29,6 @@ Game.prototype.insert = function(fn){
 };
 
 Game.autoCreate = function(data, fn){
-  console.log('GAME AUTO CREATE. DATA: ', data);
   games.insert(data.gamesArray, function(err, records){
     fn(records);
   });

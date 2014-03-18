@@ -4,6 +4,7 @@
 var Team = require('../models/team');
 //var User = require('../models/user');
 var Game = require('../models/game');
+var _ = require('lodash');
 
 /*
 //finds all games for a particular user
@@ -53,9 +54,23 @@ exports.insert = function(req, res){
 };
 
 exports.populate = function(req, res){
-  console.log('GAMES POPULATE. REQ: ', req.body);
   Game.autoCreate(req.body, function(records){
-    res.send(records);
+    _.each(records, function(record){
+      var teams = record.title.split(' at ');
+      Team.findByLongName(teams[0], function(results1){
+        var t1 = new Team(results1[0]);
+        t1.schedule.push(record._id);
+        t1.update(function(){
+          Team.findByLongName(teams[1], function(results2){
+            var t2 = new Team(results2[0]);
+            t2.schedule.push(record._id);
+            t2.update(function(){
+              res.send({});
+            });
+          });
+        });
+      });
+    });
   });
 };
 

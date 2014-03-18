@@ -21,6 +21,7 @@ function Team(team){
   this.city = team.city;
   this.color = team.color;
   this.schedule = team.schedule || [];
+  this.longName = team.city + ' ' +team.name;
 }
 
 Team.prototype.insert = function(fn){
@@ -75,8 +76,13 @@ Team.findBySportName = function(sportName, fn){
 };
 
 Team.findByName = function(name, fn){
-  console.log('TEAM FIND BY NAME. NAME: ', name);
   teams.find({name:name}).toArray(function(err, records){
+    fn(records);
+  });
+};
+
+Team.findByLongName = function(name, fn){
+  teams.find({longName:name}).toArray(function(err, records){
     fn(records);
   });
 };
@@ -86,6 +92,8 @@ Team.findByCity = function(city, fn){
     fn(records);
   });
 };
+
+Team.prototype.addSchedule = function(){};
 
 /*
 Team.findByUser = function(userId, fn){
