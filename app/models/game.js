@@ -76,7 +76,7 @@ Game.findByCity = function(city, fn){
 
 Game.findByTeam = function(sportName, teamLongName, fn){
   games.find({sportName:sportName}).toArray(function(err, records){
-    console.log('GAME FIND BY TEAM BEFORE EACH: ', records);
+    //console.log('GAME FIND BY TEAM BEFORE EACH: ', records);
     var results = [];
     _.each(records, function(record){
       var team1 = record.title.split(' at ')[0];
@@ -84,7 +84,7 @@ Game.findByTeam = function(sportName, teamLongName, fn){
       if(teamLongName === team1 || teamLongName === team2){
         results.push(record);
       }
-      console.log('GAME FIND BY TEAM: ', record, team1, team2, results);
+      //console.log('GAME FIND BY TEAM: ', record, team1, team2, results);
     });
     fn(results);
   });

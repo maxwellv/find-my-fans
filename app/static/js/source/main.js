@@ -10,7 +10,7 @@
     $('#close').click(closeMeetupPanel);
     $('#sportGames').change(pickSport);
     $('#teamGames').change(pickTeam);
-//    $('#upcomingGames').change(pickGame);
+    $('#upcomingGames').change(pickGame);
   }
 
   function showMeetupPanel(){
@@ -23,11 +23,11 @@
 
   function pickSport(){
     var sport = $('#sportGames').val();
-    alert('hey');
     var url = '/teams/' + sport;
     $.getJSON(url, appendTeams);
     console.log('getJSON url:' + url );
   }
+/*
 
   function appendTeams(data){
     $('#team').empty();
@@ -41,8 +41,10 @@
       $('#team').append($team);
     }
   }
+*/
 
   function appendTeams(data){
+    $('#teamGames').empty();
     var teams = data.teams;
     var $teamSelect = $('#teamGames');
 
@@ -58,13 +60,15 @@
   }
 
   function pickTeam(){
-    var sport = $($('#teamGames > option:selected')).attr('data-sport');
+    var sport = $('#teamGames > option:selected').attr('data-sport');
     var team = $('#teamGames').val();
     var url = '/games/byteam/' + sport + '/' + team;
     $.getJSON(url, appendGames);
   }
 
   function appendGames(data){
+    $('#upcomingGames').empty();
+    console.log('appendGames ', data);
     var games = data.games;
     var $gameSelect = $('#upcomingGames');
 
@@ -77,7 +81,6 @@
       $gameSelect.append($option);
 
     });
-    console.log('appendGames: ', data);
   }
 })();
 

@@ -73,6 +73,7 @@ describe('teams', function(){
     });
 
     describe('GET /teams/user/:id', function(){
+      this.timeout(5000);
       it('should get teams by user', function(done){
         var t1 = new Team({name:'Titans',
                            city:'Nashville',
