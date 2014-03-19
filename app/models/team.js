@@ -21,6 +21,7 @@ function Team(team){
   this.city = team.city;
   this.color = team.color;
   this.schedule = team.schedule || [];
+  this.longName = team.city + ' ' + team.name;
 }
 
 Team.prototype.insert = function(fn){

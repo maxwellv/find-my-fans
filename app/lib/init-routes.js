@@ -41,6 +41,7 @@ function load(app, fn){
   app.post('/games/populate', d, games.populate);
   //app.get('/games/user/:id', d, games.showByUser);
   app.get('/games/:sportName', d, games.showBySport);
+  app.get('/games/byteam/:sportName/:teamLongName', d, games.showByTeam);
   console.log('Routes Loaded');
   fn();
 }

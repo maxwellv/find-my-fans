@@ -41,6 +41,12 @@ exports.showBySport = function(req, res){
   });
 };
 
+exports.showByTeam = function(req, res){
+  Game.findByTeam(req.params.sportName, req.params.teamLongName, function(games){
+    res.send({games:games});
+  });
+};
+
 exports.getTeams = function(req, res){
   res.render('admin/get-teams');
 };

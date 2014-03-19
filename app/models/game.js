@@ -74,15 +74,17 @@ Game.findByCity = function(city, fn){
   });
 };
 
-Game.findByTeam = function(team, fn){
-  games.find().toArray(function(err, records){
+Game.findByTeam = function(sportName, teamLongName, fn){
+  games.find({sportName:sportName}).toArray(function(err, records){
+    console.log('GAME FIND BY TEAM BEFORE EACH: ', records);
     var results = [];
     _.each(records, function(record){
-      _.each(record.teams, function(oneTeam){
-        if(oneTeam === team){
-          results.push(record);
-        }
-      });
+      var team1 = record.title.split(' at ')[0];
+      var team2 = record.title.split(' at ')[1];
+      if(teamLongName === team1 || teamLongName === team2){
+        results.push(record);
+      }
+      console.log('GAME FIND BY TEAM: ', record, team1, team2, results);
     });
     fn(results);
   });
