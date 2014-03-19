@@ -16,7 +16,7 @@ function User(user){
   this.password = user.password;
   this.photo = user.photo;
   this.description = user.description;
-  this.teams = user.teams;
+  this.teams = user.teams || [];
   this.home = user.home;
   this._id = user._id ? Mongo.ObjectID(user._id.toString()) : undefined;
 }

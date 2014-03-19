@@ -21,13 +21,26 @@ exports.create = function(req, res){
   var newUser = new User(req.body);
   newUser.register(function(err, body){
     if (!err){
-      res.redirect('/');
+      res.redirect('/auth', {title: 'Welcome New Fan! Please Login.'});
     } else {
-      res.render('user/auth', {title: 'Registeration error, try again'});
+      res.render('user/auth', {title: 'Registeration Error. Try Again.'});
     }
   });
 };
 
+/*
+exports.create = function(req, res){
+  console.log('USERS EXPORTS CREATE: ', req.body);
+  var newUser = new User(req.body);
+  newUser.register(function(err, body){
+    if (!err){
+      res.redirect('user/auth', {title: Welcome New Fan! Please Login.');
+    } else {
+      res.render('user/auth', {title: 'Registeration Error. Try Again.'});
+    }
+  });
+};
+*/
 /*
 exports.register = function(req, res){
   var used = new User(req.body);
@@ -60,13 +73,19 @@ exports.register = function(req, res){
 */
 
 exports.login = function(req, res){
-  User.findByEmailAndPassword(req.body.email, req.body.password, function(ret){
-    if(ret._id){
+  User.findByEmailAndPassword(req.body.email, req.body.password, function(user){
+    if(user._id){
       req.session.regenerate(function(){
-        req.session.userId = ret._id.toString();
+        req.session.userId = user._id.toString();
         req.session.save(function(){
-          console.log('ooooooooooooooooooooo', req.session);
-          res.redirect('/');
+
+          //takes user to home if they have selected teams/none
+          //otherwise takes user to edit profile page
+          if(user.teams.length>0){
+            res.redirect('/');
+          }else{
+            res.redirect('/profile');
+          }
         });
       });
     }else{
@@ -127,10 +146,10 @@ exports.updateUserInfo = function(req, res){
             foundUser.email = req.body.email;
           }
           foundUser.update(function(){
-            res.redirect('/profile');
+            res.redirect('/');
           });
         } else {
-          res.redirect('/'); //need a better way of telling the user that the change didn't work
+          res.redirect('/profile'); //need a better way of telling the user that the change didn't work
         }
       });
     });
