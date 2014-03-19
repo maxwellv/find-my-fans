@@ -146,10 +146,10 @@ exports.updateUserInfo = function(req, res){
             foundUser.email = req.body.email;
           }
           foundUser.update(function(){
-            res.redirect('/profile');
+            res.redirect('/');
           });
         } else {
-          res.redirect('/'); //need a better way of telling the user that the change didn't work
+          res.redirect('/profile'); //need a better way of telling the user that the change didn't work
         }
       });
     });

@@ -23,7 +23,8 @@ block content
       .small-12.columns
         #newsFeed News Feed
           #red
-          marquee(behavior='scroll', direction='left', scrollamount='7')#newsText  ...Teddy Bridgewater off target at Louisville’s pro day...
+          //marquee(behavior='scroll', direction='left', scrollamount='7')#newsText  ...Teddy Bridgewater off target at Louisville’s pro day...
+          marquee(behavior='scroll', direction='left', scrollamount='7')#newsText .....
     .row
       .small-6.columns
         #Games Games
@@ -38,7 +39,7 @@ block content
       .small-12.columns
         p#uid(style='visibility: hidden;')= userId
         each team in teams
-          p.teamid(style='visibility: hidden;' class= team.leagueShortName)= team._id
+          input(type='text' style='visibility: hidden;' id= team.leagueShortName value= team._id)
 
 
   else
