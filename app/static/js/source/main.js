@@ -23,8 +23,23 @@
 
   function pickSport(){
     var sport = $('#sportGames').val();
+    alert('hey');
     var url = '/teams/' + sport;
     $.getJSON(url, appendTeams);
+    console.log('getJSON url:' + url );
+  }
+
+  function appendTeams(data){
+    $('#team').empty();
+    var teams = data.teams;
+    for(var i=0; i<teams.length; i++){
+      var teamData = teams[i];
+      var $team = $('<option>');
+      $team.text(teamData.name);
+      $team.val(teamData._id);
+      $('#team').val($team);
+      $('#team').append($team);
+    }
   }
 
   function appendTeams(data){
@@ -64,6 +79,5 @@
     });
     console.log('appendGames: ', data);
   }
-
 })();
 
