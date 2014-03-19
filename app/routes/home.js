@@ -8,6 +8,7 @@ exports.index = function(req, res){
   console.log('req.session.userId', req.session.userId);
   var userId = req.session.userId;
   var teams = [];
+  var games = [];
   var meetups;
 
   if(userId !== undefined){
@@ -20,14 +21,16 @@ exports.index = function(req, res){
         for(var i=0; i<user.teams.length; i++){
           Team.findById(user.teams[i], function(team){
             teams.push(team);
+            //Game.findByTeam(team.sportName, team.longName, function(game){
+            //  games.push(game);
+            //});
           });
         }
       }
 
-      Meetup.findByUser(userId, function(records){
-        meetups = records;
-        res.render('home/index', {title: 'Welcome Fan!', userId:userId, teams:teams, meetups:meetups});
-        //res.send({userId:userId, teams:teams, meetups:meetups});
+      Meetup.findByUser(userId, function(meetups){
+        res.render('home/index', {title: 'Welcome Fan!', userId:userId, teams:teams, meetups:meetups, games:games});
+        //res.send({userId:userId, teams:teams, meetups:meetups, games:games});
       });
     });
 

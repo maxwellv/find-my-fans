@@ -162,7 +162,6 @@ exports.updateFavoriteTeams = function(req, res){
   User.findById(id, function(foundUser){
     foundUser = new User(foundUser);
     for (var x in req.body){
-      console.log('for loop: ', req.body[x]);
       if (req.body[x] !== 'noTeam'){
         newTeams.push(req.body[x]);
       }

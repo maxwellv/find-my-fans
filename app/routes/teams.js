@@ -12,13 +12,16 @@ exports.index = function(req, res){
   var records = [];
 
   User.findById(id, function(user){
-    if(user.teams!==null){
+    if(user.teams.length !== 0){
       var teams = user.teams;
+      console.log(user);
 
       for(var i=0; i < teams.length; i++){
         console.log(i);
         var temp = teams[i].toString();
         Team.findById(temp, function(record){
+          console.log('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+          console.log(record);
           records.push(record);
           if (records.length === teams.length){
             console.log('DONE!', records);

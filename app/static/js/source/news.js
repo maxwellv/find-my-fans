@@ -89,8 +89,8 @@
 
   //pulls headlines array from object, flattens and shuffles
   function receiveNews(data){
-    console.log(data);
-    console.log('newsArray', newsArray);
+    //console.log(data);
+    //console.log('newsArray', newsArray);
 
     //weird _.flatten error, for loop is a workaround
     for(var i=0; i<data.headlines.length; i++){
@@ -104,7 +104,7 @@
       var story = newsArray[i];
       var tempString = '   ...'+story.headline+'...   ';
       newsString += tempString;
-      console.log(tempString);
+      //console.log(tempString);
     }
     sendNews(newsString);
   }

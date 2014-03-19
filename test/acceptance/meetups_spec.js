@@ -5,7 +5,7 @@ var app = require('../../app/app');
 var request = require('supertest');
 var expect = require('chai').expect;
 var User, Meetup;
-var sue, sueId;
+var sue, sueId, meetup;
 var cookie;
 
 describe('users', function(){
@@ -23,7 +23,7 @@ describe('users', function(){
   beforeEach(function(done){
     global.nss.db.dropDatabase(function(err, result){
       sue = new User({name:'sue', email:'sue@aol.com', password:'abcd'});
-      var meetup = new Meetup({sportName: 'Hockey', city:'Nashville', loyalty:'s:70~l:90~t:27', teams:['s:70~l:90~t:27', 's:70~l:90~t:5']});
+      meetup = new Meetup({sportName: 'Hockey', city:'Nashville', loyalty:'Predators', teams:['s:70~l:90~t:27', 's:70~l:90~t:5']});
       sue.register(function(){
         meetup.insert(function(){
           User.findByName('sue', function(foundUser){
@@ -57,6 +57,18 @@ describe('users', function(){
           attendees:[sueId]})
         .end(function(err, res){
           expect(res.status).to.equal(302);
+          done();
+        });
+      });
+    });
+    describe('GET /meetups:id', function(){
+      it('should return the specified meetup', function(done){
+        request(app)
+        .get('/meetups/'+meetup._id)
+        .set('cookie', cookie)
+        .end(function(err, res){
+          console.log('GET MEETUP', meetup);
+          console.log('res.body', res.body);
           done();
         });
       });

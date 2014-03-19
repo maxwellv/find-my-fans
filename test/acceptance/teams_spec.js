@@ -1,7 +1,7 @@
 /* jshint expr:true */
 'use strict';
 
-process.env.DBNAME = 'team2-test';
+process.env.DBNAME = 'find-my-fans-test';
 var app = require('../../app/app');
 var request = require('supertest');
 var expect = require('chai').expect;
@@ -11,6 +11,7 @@ var sue;
 var cookie;
 
 describe('teams', function(){
+  this.timeout(10000);
   before(function(done){
     request(app)
     .get('/')
@@ -108,6 +109,22 @@ describe('teams', function(){
         //.expect(404, done);
       });
     });
+
+    describe('POST /teams/populate', function(){
+      it('should populate the DB with (garbage) team data', function(done){
+        var sportsObj = {sports: [{name:'crapball', leagues:[{shortName: 'crapball league', name: 'league of crapball', teams:[{uid: '1234', name: 'crapball team', sportName: 'crapball', leagueShortName:'crapball league', leagueName: 'league of crapball', location: 'Crapville', color: 'brown'}]}]}]};
+        request(app)
+        .post('/teams/populate')
+        .set('cookie', cookie)
+        .send(sportsObj)
+        .end(function(err, res){
+          //expect something here
+          //console.log(res);
+          done();
+        });
+      });
+    });
+
 
   //end of auth
   });

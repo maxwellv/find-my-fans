@@ -1,8 +1,8 @@
 extends ../shared/template
 
 block content
-  h1 This is the page for showing all meetups.
+  h1 Meet With Other Fans:
   each meetup in meetups
-    a(href='/meetups/'+ meetup._id.toString()) #{meetup.sportName} meetup in #{meetup.city} meet up location #{meetup.city}
+    a(href='/meetups/'+ meetup._id.toString()) Sport: &nbsp;  #{meetup.sportName}.<br>  For #{meetup.loyalty} fans.<br> Game: &nbsp;  #{meetup.teams}. <br> Location: &nbsp; #{meetup.place}. <br><br>
 
 

@@ -17,6 +17,7 @@ function Meetup(meetup){
   this.city = meetup.city;
   this.loyalty = meetup.loyalty;
   this.attendees = meetup.attendees|| [];
+  this.place = meetup.place;
 }
 
 Meetup.prototype.insert = function(fn){

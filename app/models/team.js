@@ -35,7 +35,7 @@ Team.autoCreate = function(data, fn){
   var dbData = [];
   for(var i=0; i<data.length; i++){
     var team = new Team(data[i]);
-    team.insert(function(records){//TODO: fix this, making functions inside a loop is a bad idea
+    team.insert(function(err, records){//TODO: fix this, making functions inside a loop is a bad idea
       dbData.push(records[0]);
     });
   }
@@ -59,7 +59,10 @@ Team.prototype.update = function(fn){
 
 
 Team.findById = function(_id, fn){
+  //var _id = new Mongo.ObjectID(id);
   teams.findOne({_id:_id}, function(err, record){
+    console.log(_id);
+    console.log(record);
     fn(record);
   });
 };

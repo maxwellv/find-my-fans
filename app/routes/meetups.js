@@ -7,9 +7,9 @@ var Team = require('../models/team');
 var Mongo = require('mongodb');
 
 exports.create = function(req, res){
-  console.log('GOT TO MEETUPS.CREATE');
-  var meetup  = new Meetup(req.body);
   req.body.userId = (req.session.userId).toString();
+  console.log('GOT TO MEETUPS.CREATE', req.body);
+  var meetup  = new Meetup(req.body);
   meetup.userId = req.body.userId;
   meetup.insert(function(){
     User.findById(req.body.userId, function(theUser){
@@ -34,24 +34,30 @@ exports.createMeetup = function(req, res){
 
 exports.showMeetup = function(req, res){
   Meetup.findById(Mongo.ObjectID(req.params.id), function(foundMeetup){
-    var team1, team2, loyalty;
+    res.render('meetups/show-meetup', {meetup:foundMeetup});
+    //res.send({meetup:foundMeetup});
+    /*var team1, team2, loyalty;
     Team.findById(foundMeetup.teams[0], function(foundTeam){
       team1 = foundTeam;
       Team.findById(foundMeetup.teams[1], function(foundTeam){
         team2 = foundTeam;
         Team.findById(foundMeetup.loyalty, function(foundTeam){
           loyalty = foundTeam;
-          getAttendeeNames(foundMeetup.attendees, function(returnedAttendees){
-            console.log('GOT THESE ATTENDEES:', returnedAttendees);
-            returnedAttendees = returnedAttendees.join(', ');
-            res.render('meetups/show-meetup', {meetup:foundMeetup, team1:team1, team2:team2, loyalty:loyalty, attendees:returnedAttendees});
-          });
+          res.send({meetup:foundMeetup, team1:team1, team2:team2, loyalty:loyalty});
+          //res.render('meetups/show-meetup', {meetup:foundMeetup, team1:team1, team2:team2, loyalty:loyalty});
+          //getAttendeeNames(foundMeetup.attendees, function(returnedAttendees){
+            //console.log('GOT THESE ATTENDEES:', returnedAttendees);
+            //returnedAttendees = returnedAttendees.join(', ');
+            //res.render('meetups/show-meetup', {meetup:foundMeetup, team1:team1, team2:team2, loyalty:loyalty, attendees:returnedAttendees});
+          //});
         });
       });
-    });
+    });*/
   });
 };
 
+//not using attendees
+/*
 function getAttendeeNames(attendees, fn){
   var ret = [];
   if (!attendees){
@@ -68,4 +74,4 @@ function getAttendeeNames(attendees, fn){
     }
   }
 }
-
+*/
