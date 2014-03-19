@@ -15,17 +15,16 @@ exports.index = function(req, res){
     if(user.teams!==null){
       var teams = user.teams;
 
-      for(var i=0; i<teams.length; i++){
+      for(var i=0; i < teams.length; i++){
         console.log(i);
         var temp = teams[i].toString();
         Team.findById(temp, function(record){
           records.push(record);
+          if (records.length === teams.length){
+            console.log('DONE!', records);
+            res.send({records:records});
+          }
         });
-
-        if(records.length===3){
-          console.log('DONE!', records);
-          res.send({records:records});
-        }
       }
 
     }else{

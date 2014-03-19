@@ -68,7 +68,7 @@ describe('users', function(){
       .field('password', '1234')
       .attach('photo', file)
       .end(function(err, res){
-        expect(res.status).to.equal(302);
+        expect(res.status).to.equal(200);
         done();
       });
     });

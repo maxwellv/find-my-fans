@@ -145,16 +145,16 @@ describe('Game', function(){
 
   describe('findByTeam', function(){
     it('should find games with a given team.', function(done){
-      var obj1 = {teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/16/14 '}; //dateTime notation is not exact
+      var obj1 = {title:'Rockets at Spurs', teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/16/14 ', sportName:'basketball'}; //dateTime notation is not exact
       var game1 = new Game(obj1);
-      var obj2 = {teams:['Lakers', 'Heat'], city:'Miami', dateTime:'3/17/14 '}; //dateTime notation is not exact
+      var obj2 = {title: 'Lakers at Heat', teams:['Lakers', 'Heat'], city:'Miami', dateTime:'3/17/14 ', sportName:'basketball'}; //dateTime notation is not exact
       var game2 = new Game(obj2);
-      var obj3 = {teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/17/14 '}; //dateTime notation is not exact
+      var obj3 = {title: 'Rockets at Spurs', teams:['Rockets', 'Spurs'], city:'Houston', dateTime:'3/17/14 ', sportName:'basketball'}; //dateTime notation is not exact
       var game3 = new Game(obj3);
       game1.insert(function(){
         game2.insert(function(){
           game3.insert(function(){
-            Game.findByTeam('Rockets', function(records){
+            Game.findByTeam('basketball', 'Rockets', function(records){
               expect(records.length).to.equal(2);
               done();
             });

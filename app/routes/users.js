@@ -21,7 +21,7 @@ exports.create = function(req, res){
   var newUser = new User(req.body);
   newUser.register(function(err, body){
     if (!err){
-      res.redirect('/auth', {title: 'Welcome New Fan! Please Login.'});
+      res.render('user/auth', {title: 'Welcome New Fan! Please Login.'});//reminder: we cannot do res.redirect AND pass in a title or other objs like this
     } else {
       res.render('user/auth', {title: 'Registeration Error. Try Again.'});
     }
