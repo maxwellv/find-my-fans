@@ -11,39 +11,39 @@ block content
   #top
     .small-4.columns
       #author Author
-        p Santa
+        p #{user.name}
     .small-4.columns
       #teamL Loyalty
-        p Predators
+        p #{meetup.loyalty}
     .small-4.columns
-      #league League
-        p NFL
-        img#leagueImg
+      //#league League
+        //p NFL
+        //img#leagueImg
+      #league Sport
+        p(style='text-transform:capitalize;') #{meetup.sportName}
     .row
       .small-12.columns
         #teamsVsM
-          #team1M team1
-            p "PREDATORS"
-            #cityM Tennessee
+          #team1M
+            p #{team1}
+            //#cityM Tennessee
           .vsM
-          #team2M team2
-            p "PECKERS"
-            #city2M Green Bay
+          #team2M
+            p #{team2}
+            //#city2M Green Bay
           #dateTime Date/Time
-            p "March 23 - 7:30 PM"
+            p #{dateTime}
           #citta City
-            p "Nashville"
+            //p "Nashville"
   #bottom
     .small-6.columns
       #barImg
         img#barPic
     .small-6.columns
-      #barName
-        p Jed's Sports Bar & Grille
+      //#barName
+        //p Jed's Sports Bar & Grille
       #address
-        p 114 28th Ave N, Nashville, TN 37203 (615) 320-4399
+        p #{meetup.place}
       #sportMap
         img#mapPic
-      #attendees Attendees
-        p #16
 

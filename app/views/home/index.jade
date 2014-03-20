@@ -28,8 +28,15 @@ block content
     .row
       .small-6.columns
         #Games Games
+          p
+            each game in games
+              a(href=game.ticketURL, target='_blank') #{game.title} <br>
+
       .small-6.columns
         #MeetUps: a(href="/meetups") MeetUps
+          p
+            each meetup in meetups
+              a(href='meetups/'+meetup._id) #{meetup.loyalty}: #{meetup.teams} <br> #{meetup.place}<br><br>
     .row
       .small-7.columns
         #sportBars Sport Bars

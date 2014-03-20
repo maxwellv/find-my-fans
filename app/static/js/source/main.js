@@ -133,6 +133,7 @@
 
     event.preventDefault();
     console.log('submitMeetup: ', gameId, teams, sportName, loyalty, place);
+    closeMeetupPanel();
   }
 
   function meetupSubmitted(){

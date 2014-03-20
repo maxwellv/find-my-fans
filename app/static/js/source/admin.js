@@ -153,6 +153,7 @@
       object.city = data.venue.city;
       object.ticketURL  = data.url;
       object.locationData = data.venue.location;
+      object.dateTime = data.datetime_utc;
       gameData.push(object);
     }
     console.log('formatGames end: ', gameData);
